@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 
 export const TodoList = () => {
   const [todos, setTodos] = useState([]);
-  const [inputTodo, setInputTodo] = useState("");
+  const [inputTodoValue, setInputTodoValue] = useState("");
+  const [editTodoValue, setEditTodoValue] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [idCount, setIdCount] = useState(1);
 
   const createTodo = () => {
-    if (!inputTodo){
+    if (!inputTodoValue){
       alert('Todoを入力してください');
       return;
     }
-    setTodos([...todos, { id: idCount, name: inputTodo, completed: false }]);
-    setInputTodo("");
+    setTodos([...todos, { id: idCount, name: inputTodoValue, completed: false }]);
+    setInputTodoValue("");
     setIdCount(idCount + 1);
   };
 
@@ -29,15 +30,14 @@ export const TodoList = () => {
   const editTodo = (id) => {
     const todo = todos.find(todo => todo.id === id);
     setEditIndex(id);
-    setInputTodo(todo.name);
+    setEditTodoValue(todo.name);
   };
 
   const updateTodo = (id) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, name: inputTodo } : todo));
+    setTodos(todos.map(todo => todo.id === id ? { ...todo, name: editTodoValue } : todo));
     setEditIndex(null);
-    setInputTodo("");
+    setEditTodoValue("");
   };
-
 
   // ここでタスクのステータスを定義
   const completedTasks = todos.filter(todo => todo.completed).length;
@@ -54,7 +54,7 @@ export const TodoList = () => {
         <span className='mr-1'>未完了：{uncompletedTasks}</span>
       </p>
       <h2>Todo入力フォーム</h2>
-      <input className='mr-1' type="text" value={inputTodo} onChange={(e) => setInputTodo(e.target.value)} />
+      <input className='mr-1' type="text" value={inputTodoValue} onChange={(e) => setInputTodoValue(e.target.value)} />
       <button onClick={createTodo}>保存</button>
       <h2>Todo一覧</h2>
       <ul>
@@ -63,7 +63,7 @@ export const TodoList = () => {
             <input className='mr-1' type="checkbox" id={`todo-${todo.id}`} checked={todo.completed} onChange={() => toggleCompleted(todo.id)} />
             {editIndex === todo.id ? 
               <>
-                <input className='mr-1' value={inputTodo} onChange={(e) => setInputTodo(e.target.value)} />
+                <input className='mr-1' value={editTodoValue} onChange={(e) => setEditTodoValue(e.target.value)} />
                 <button className='mr-1' onClick={() => updateTodo(todo.id)}>保存</button>
               </> :
               <>
